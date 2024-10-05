@@ -1,0 +1,67 @@
+﻿@page "/Ventas"
+@inject VentasServices servicesVentas;
+@inject NavigationManager NavigationManager;
+@rendermode InteractiveServer
+
+<div style="color: #bbb">
+    <h1 class="text-center display-1">Ventas</h1>
+
+    <NavLink class="btn btn-primary" href="/AgregarVenta">Agregar Venta</NavLink>
+
+    <table class="table table-striped table-bordered" style="color: #bbb">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Comentario</th>
+                <th>ID Usuario</th>
+                <th colspan="2" style="text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        @*public int Id { get; set; }
+        public string comentario { get; set; }
+        public int IdUsuario { get; set; }*@
+        <tbody>
+            @if (oVentas != null && oVentas.Any())
+            {
+                foreach (var venta in oVentas)
+                {
+                    <tr style="color: #bbb">
+                        <td>@venta.Id</td>
+                        <td>@venta.comentario</td>
+                        <td>@venta.IdUsuario</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarUsuario(venta.Id))">Eliminar</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" @onclick="@(() => ModificarUsuario(venta.Id))">Modificar</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public List<Venta> oVentas = [];
+
+
+    protected override void OnInitialized()
+    {
+        oVentas = servicesVentas.GetVentasSer();
+    }
+
+    public void EliminarUsuario(int id)
+    {
+        servicesVentas.DeleteVentaSer(id);
+        oVentas = servicesVentas.GetVentasSer();
+    }
+
+    public void ModificarUsuario(int id)
+    {
+        // Navegar a la URL Modificar Usuario con el id
+        NavigationManager.NavigateTo($"/ModificarVenta/{id}");
+    }
+
+}
+

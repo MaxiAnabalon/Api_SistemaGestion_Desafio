@@ -1,0 +1,65 @@
+﻿@page "/ProductosVendidos"
+@inject ProductosVendidosServices servicesProductosVendidos;
+@inject NavigationManager NavigationManager;
+@rendermode InteractiveServer
+
+<div style="color: #bbb">
+    <h1 class="text-center display-1">Productos Vendidos</h1>
+
+    <NavLink class="btn btn-primary" href="/AgregarProductosVendidos">Agregar Producto Vendido</NavLink>
+
+    <table class="table table-striped table-bordered" style="color: #bbb">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>ID Producto</th>
+                <th>Stock</th>
+                <th>ID Venta</th>
+                <th colspan="2" style="text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (oProductosVendido != null && oProductosVendido.Any())
+            {
+                foreach (var producto in oProductosVendido)
+                {
+                    <tr style="color: #bbb">
+                        <td>@producto.Id</td>
+                        <td>@producto.IdProducto</td>
+                        <td>@producto.stock</td>
+                        <td>@producto.IdVenta</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarProducto(producto.Id))">Eliminar</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" @onclick="@(() => ModificarProducto(producto.Id))">Modificar</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public List<ProductoVendido> oProductosVendido = [];
+
+
+    protected override void OnInitialized()
+    {
+        oProductosVendido = servicesProductosVendidos.GetProductosVendidosSer();
+    }
+
+    public void EliminarProducto(int id)
+    {
+        servicesProductosVendidos.DeleteProductoVendidoSer(id);
+        oProductosVendido = servicesProductosVendidos.GetProductosVendidosSer();
+    }
+
+    public void ModificarProducto(int id)
+    {
+        // Navegar a la URL Modificar Producto con el id
+        NavigationManager.NavigateTo($"/ModificarProductoVendido/{id}");
+    }
+
+}

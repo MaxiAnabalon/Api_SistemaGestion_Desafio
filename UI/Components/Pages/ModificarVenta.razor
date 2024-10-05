@@ -1,0 +1,56 @@
+﻿@page "/ModificarVenta/{id:int}"
+@rendermode InteractiveServer
+@inject VentasServices servicesVentas
+@inject NavigationManager NavigationManager
+
+
+<h2>Modificar Usuarios</h2>
+ 
+@if (nuevoVenta != null)
+{
+    <EditForm Model="nuevoVenta" OnValidSubmit="GuardarVenta" FormName="ModificarVentaForm">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>Comentario</label>
+            <InputText @bind-Value="nuevoVenta.comentario" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoVenta.comentario)" />
+        </div>
+        <div class="form-group">
+            <label>ID Usuario</label>
+            <InputNumber @bind-Value="nuevoVenta.IdUsuario" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoVenta.IdUsuario)" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    </EditForm>
+}
+else
+{
+    <p>Cargando...</p>
+}
+ 
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Venta nuevoVenta = new Venta();
+
+    protected override void OnInitialized()
+    {
+        // Cargar el producto basado en el ID de manera sincrónica
+        nuevoVenta = servicesVentas.OneVentaSer(Id);
+    }
+
+    private void GuardarVenta()
+    {
+   
+        servicesVentas.UpdateVentaSer(Id, nuevoVenta);
+        NavigationManager.NavigateTo("/Ventas");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/Ventas");
+    }
+}

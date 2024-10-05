@@ -1,0 +1,70 @@
+﻿@page "/ModificarProducto/{id:int}"
+@rendermode InteractiveServer
+@inject ProductosServices servicesProductos
+@inject NavigationManager NavigationManager
+
+
+<h2>Modificar Producto</h2>
+
+@if (nuevoProducto != null)
+{
+    <EditForm Model="nuevoProducto" OnValidSubmit="GuardarProducto" FormName="ModificarProductoForm">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>Descripción</label>
+            <InputText @bind-Value="nuevoProducto.descripcion" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProducto.descripcion)" />
+        </div>
+        <div class="form-group">
+            <label>Costo</label>
+            <InputNumber @bind-Value="nuevoProducto.costo" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProducto.costo)" />
+        </div>
+        <div class="form-group">
+            <label>Precio de Venta</label>
+            <InputNumber @bind-Value="nuevoProducto.precioVenta" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProducto.precioVenta)" />
+        </div>
+        <div class="form-group">
+            <label>Stock</label>
+            <InputNumber @bind-Value="nuevoProducto.stock" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProducto.stock)" />
+        </div>
+        <div class="form-group">
+            <label>ID Usuario</label>
+            <InputNumber @bind-Value="nuevoProducto.IdUsuario" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProducto.IdUsuario)" />
+        </div>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    </EditForm>
+}
+else
+{
+    <p>Cargando...</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Producto nuevoProducto = new Producto();
+
+    protected override void OnInitialized()
+    {
+        // Cargar el producto basado en el ID de manera sincrónica
+        nuevoProducto = servicesProductos.OneProductoSer(Id);
+    }
+
+    private void GuardarProducto()
+    {
+        // Llama al método UpdateProductoSer con el ID y el producto actualizado
+        servicesProductos.UpdateProductoSer(Id, nuevoProducto);
+        NavigationManager.NavigateTo("/Productos");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/Productos");
+    }
+}

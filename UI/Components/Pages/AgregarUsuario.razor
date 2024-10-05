@@ -1,0 +1,55 @@
+﻿@page "/AgregarUsuario"
+@rendermode InteractiveServer
+@inject UsuariosServices servicesUsuarios;
+@inject NavigationManager NavigationManager
+
+<h2>Agregar Nuevo Usuario</h2> 
+
+<EditForm Model="nuevoUsuario" OnValidSubmit="GuardarUsuario" FormName="AgregarUsuarioForm">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Nombre</label>
+        <InputText @bind-Value="nuevoUsuario.nombre" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoUsuario.nombre)" />
+    </div>
+    <div class="form-group">
+        <label>Apellido</label>
+        <InputText @bind-Value="nuevoUsuario.apellido" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoUsuario.apellido)" />
+    </div>
+    <div class="form-group">
+        <label>Nombre Usuario</label>
+        <InputText @bind-Value="nuevoUsuario.nombreDeUsuario" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoUsuario.nombreDeUsuario)" />
+    </div>
+    <div class="form-group">
+        <label>Contraseña</label>
+        <InputText @bind-Value="nuevoUsuario.contraseña" class="form-control" type="password" required />
+        <ValidationMessage For="@(() => nuevoUsuario.contraseña)" />
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <InputText @bind-Value="nuevoUsuario.email" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoUsuario.email)" />
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+ 
+@code {
+
+    public Usuario nuevoUsuario = new Usuario();
+
+    private async Task GuardarUsuario()
+    {
+        servicesUsuarios.InsertUsuarioSer(nuevoUsuario);
+        NavigationManager.NavigateTo("/Usuarios");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/Usuarios");
+    }
+}
+

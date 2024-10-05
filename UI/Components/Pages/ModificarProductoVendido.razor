@@ -1,0 +1,64 @@
+﻿@page "/ModificarProductoVendido/{id:int}"
+@rendermode InteractiveServer
+@inject ProductosVendidosServices servicesProductosVendidos;
+@inject NavigationManager NavigationManager
+
+<h2>Modificar Producto Vendido</h2>
+
+@if (nuevoProductoVendido != null)
+{
+    <EditForm Model="nuevoProductoVendido" OnValidSubmit="GuardarProducto" FormName="ModificarProductoVendidoForm">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>ID Producto</label>
+            <InputNumber @bind-Value="nuevoProductoVendido.IdProducto" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProductoVendido.IdProducto)" />
+        </div>
+        <div class="form-group">
+            <label>Stock</label>
+            <InputNumber @bind-Value="nuevoProductoVendido.stock" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProductoVendido.stock)" />
+        </div>
+        <div class="form-group">
+            <label>ID Venta</label>
+            <InputNumber @bind-Value="nuevoProductoVendido.IdVenta" class="form-control" required />
+            <ValidationMessage For="@(() => nuevoProductoVendido.IdVenta)" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    </EditForm>
+}
+else
+{
+    <p>Cargando...</p>
+}
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductoVendido nuevoProductoVendido = new ProductoVendido();
+
+    protected override void OnInitialized()
+    {
+        // Cargar el producto basado en el ID de manera sincrónica
+        nuevoProductoVendido = servicesProductosVendidos.OneProductoVendidoSer(Id);
+    }
+
+    private void GuardarProducto()
+    {
+        // Llama al método UpdateProductoSer con el ID y el producto actualizado
+        servicesProductosVendidos.UpdateProductoVendidoSer(Id, nuevoProductoVendido);
+        NavigationManager.NavigateTo("/ProductosVendidos");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/ProductosVendidos");
+    }
+}
+

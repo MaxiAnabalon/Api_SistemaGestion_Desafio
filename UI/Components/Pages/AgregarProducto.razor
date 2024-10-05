@@ -1,0 +1,55 @@
+﻿@page "/AgregarProducto"
+@rendermode InteractiveServer 
+@inject ProductosServices servicesProductos;
+@inject NavigationManager NavigationManager
+
+<h2>Agregar Nuevo Producto</h2>
+
+<EditForm Model="nuevoProducto" OnValidSubmit="GuardarProducto" FormName="AgregarProductoForm">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Descripción</label>
+        <InputText @bind-Value="nuevoProducto.descripcion" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProducto.descripcion)" /> 
+    </div>
+    <div class="form-group">
+        <label>Costo</label>
+        <InputNumber @bind-Value="nuevoProducto.costo" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProducto.costo)" />
+    </div>
+    <div class="form-group">
+        <label>Precio de Venta</label>
+        <InputNumber @bind-Value="nuevoProducto.precioVenta" class="form-control" required />
+         <ValidationMessage For="@(() => nuevoProducto.precioVenta)" /> 
+    </div>
+    <div class="form-group">
+        <label>Stock</label>
+        <InputNumber @bind-Value="nuevoProducto.stock" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProducto.stock)" /> 
+    </div>
+    <div class="form-group">
+        <label>ID Usuario</label>
+        <InputNumber @bind-Value="nuevoProducto.IdUsuario" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProducto.IdUsuario)" /> 
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+@code {
+
+    public Producto nuevoProducto = new Producto();
+
+    private async Task GuardarProducto()
+    {
+        servicesProductos.InsertProductoSer(nuevoProducto);
+        NavigationManager.NavigateTo("/Productos");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/Productos");
+    }
+}
+

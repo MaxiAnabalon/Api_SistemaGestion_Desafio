@@ -1,0 +1,73 @@
+﻿@page "/Usuarios"
+@inject UsuariosServices servicesUsuarios;
+@inject NavigationManager NavigationManager;
+@rendermode InteractiveServer
+
+<div style="color: #bbb">
+    <h1 class="text-center display-1">Usuarios</h1>
+
+    <NavLink class="btn btn-primary" href="/AgregarUsuario">Agregar Usuario</NavLink>
+
+    <table class="table table-striped table-bordered" style="color: #bbb">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Nombre Usuario</th>
+                <th>Contraseña</th>
+                <th>Email</th>
+                <th colspan="2" style="text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (oUsuarios != null && oUsuarios.Any())
+            {
+                foreach (var usuario in oUsuarios)
+                {
+                    <tr style="color: #bbb">
+                        <td>@usuario.Id</td>
+                        <td>@usuario.nombre</td>
+                        <td>@usuario.apellido</td>
+                        <td>@usuario.nombreDeUsuario</td>
+                        <td>@* @usuario.contraseña *@
+                           @*  <input @bind="@usuario.contraseña" type="password" /> *@
+                            <input type="password" value="@usuario.contraseña" readonly style="color: inherit; background-color: inherit; padding: inherit; border-radius: inherit;" />
+                        </td>
+                        <td>@usuario.email</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="@(() => EliminarUsuario(usuario.Id))">Eliminar</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" @onclick="@(() => ModificarUsuario(usuario.Id))">Modificar</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public List<Usuario> oUsuarios = [];
+
+
+    protected override void OnInitialized()
+    {
+        oUsuarios = servicesUsuarios.GetUsuariosSer();
+    }
+
+    public void EliminarUsuario(int id)
+    {
+        servicesUsuarios.DeleteUsuarioSer(id);
+        oUsuarios = servicesUsuarios.GetUsuariosSer();
+    }
+
+    public void ModificarUsuario(int id)
+    {
+        // Navegar a la URL Modificar Usuario con el id
+        NavigationManager.NavigateTo($"/ModificarUsuario/{id}");
+    }
+
+}
+

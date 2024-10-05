@@ -1,0 +1,46 @@
+﻿@page "/AgregarProductosVendidos"
+@rendermode InteractiveServer
+@inject ProductosVendidosServices servicesProductosVendidos;
+@inject NavigationManager NavigationManager
+
+<h2>Agregar Nuevo Producto Vendido</h2>
+
+<EditForm Model="nuevoProductoVendido" OnValidSubmit="GuardarProducto" FormName="AgregarProductoForm">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>ID Producto</label>
+        <InputNumber @bind-Value="nuevoProductoVendido.IdProducto" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProductoVendido.IdProducto)" />
+    </div>
+    <div class="form-group">
+        <label>Stock</label>
+        <InputNumber @bind-Value="nuevoProductoVendido.stock" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProductoVendido.stock)" />
+    </div>
+    <div class="form-group">
+        <label>ID Venta</label>
+        <InputNumber @bind-Value="nuevoProductoVendido.IdVenta" class="form-control" required />
+        <ValidationMessage For="@(() => nuevoProductoVendido.IdVenta)" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+@code {
+
+    public ProductoVendido nuevoProductoVendido = new ProductoVendido();
+
+    private async Task GuardarProducto()
+    {
+        servicesProductosVendidos.InsertProductosVendidoSer(nuevoProductoVendido);
+        NavigationManager.NavigateTo("/ProductosVendidos");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/ProductosVendidos");
+    }
+}
+

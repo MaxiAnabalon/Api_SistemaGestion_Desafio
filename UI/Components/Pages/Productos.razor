@@ -1,0 +1,69 @@
+﻿@page "/Productos"
+@inject ProductosServices servicesProductos;
+@inject NavigationManager NavigationManager;
+@rendermode InteractiveServer 
+
+<div style="color: #bbb">
+<h1 class="text-center display-1">Productos</h1>
+
+<NavLink class="btn btn-primary" href="/AgregarProducto">Agregar Producto</NavLink>
+
+<table class="table table-striped table-bordered" style="color: #bbb">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Descripción</th>
+            <th>Costo</th>
+            <th>Precio de Venta</th>
+            <th>Stock</th>
+            <th>ID Usuario</th>
+            <th colspan="2" style="text-align: center;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (oProductos != null && oProductos.Any())
+        {
+            foreach (var producto in oProductos)
+            {
+                <tr style="color: #bbb">
+                    <td>@producto.Id</td>
+                    <td>@producto.descripcion</td>
+                    <td>@producto.costo</td>
+                    <td>@producto.precioVenta</td>
+                    <td>@producto.stock</td>
+                    <td>@producto.IdUsuario</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="@(() => EliminarProducto(producto.Id))">Eliminar</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-secondary" @onclick="@(() => ModificarProducto(producto.Id))">Modificar</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+</div>
+
+@code {
+    public List<Producto> oProductos = [];
+
+
+    protected override void OnInitialized()
+    {            
+        oProductos = servicesProductos.GetProductosSer();        
+    }
+
+    public void EliminarProducto(int id)
+    {
+        servicesProductos.DeleteProductoSer(id);            
+        oProductos = servicesProductos.GetProductosSer();
+    }
+
+    public void ModificarProducto(int id)
+    {
+        // Navegar a la URL Modificar Producto con el id
+        NavigationManager.NavigateTo($"/ModificarProducto/{id}");
+    }
+    
+}
