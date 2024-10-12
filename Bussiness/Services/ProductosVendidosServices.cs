@@ -7,9 +7,13 @@ public class ProductosVendidosServices
 {
     private ProductoVendidoDB _productosVendidosDataAccess;
 
-    public ProductosVendidosServices (ProductoVendidoDB productoVendidoDataAccess) 
+    public ProductosVendidosServices(ProductoVendidoDB productoVendidoDataAccess)
     {
         _productosVendidosDataAccess = productoVendidoDataAccess;
+    }
+
+    public ProductosVendidosServices()
+    {
     }
 
     public ProductoVendido? OneProductoVendidoSer(int Id)

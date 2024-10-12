@@ -1,20 +1,29 @@
 ﻿using Bussiness.Services;
 using Entidades;
+using Data.DataAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+
 
 namespace Api_SistemaGestion.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class VentasController : ControllerBase
     {
         private readonly ILogger<VentasController> _logger;
         private readonly VentasServices _ventasServices;
-        public VentasController(ILogger<VentasController> logger, VentasServices ventasServices)
+        private readonly ProductosServices _productosServices;
+        private readonly ProductosVendidosServices _productosVendidosServices; 
+
+        public VentasController(ILogger<VentasController> logger, VentasServices ventasServices, ProductosServices productosServices,ProductosVendidosServices productosVendidosServices)
         {
             _logger = logger;
             _ventasServices = ventasServices;
+            _productosServices = productosServices;
+            _productosVendidosServices = productosVendidosServices;
         }
 
         [HttpGet]
@@ -36,6 +45,36 @@ namespace Api_SistemaGestion.Controllers
         public ActionResult<Venta> CrearVenta([FromBody] Venta venta)
         {
             var ventaCreado = _ventasServices.InsertVentaSer(venta);
+            var idDelUsuario = ventaCreado.IdUsuario;
+
+            if (ventaCreado.lsProductosVendidos != null && ventaCreado.lsProductosVendidos.Count > 0)
+            {
+                // Lista para almacenar los productos vendidos
+                List<ProductoVendido> productosVendidosParaInsertar = new List<ProductoVendido>();
+
+                // Llenar la lista de productos vendidos
+                foreach (var productoVendido in ventaCreado.lsProductosVendidos)
+                {
+                    // Asignar el IdVenta
+                    productoVendido.IdVenta = ventaCreado.Id;
+
+                    // Agregar a la lista temporal
+                    productosVendidosParaInsertar.Add(productoVendido);
+
+                    // Actualizar stock del producto
+                    var producto = _productosServices.OneProductoSer(productoVendido.IdProducto);
+                    producto.stock -= productoVendido.stock;
+                    _productosServices.UpdateProductoSer(producto.Id, producto);
+                }
+
+                // Insertar todos los productos vendidos
+                foreach (var productoVendido in productosVendidosParaInsertar)
+                {
+                    _productosVendidosServices.InsertProductosVendidoSer(productoVendido);
+                }
+
+            }
+
             return CreatedAtAction(nameof(GetVenta), new { id = ventaCreado.Id }, venta);
         }
 
@@ -85,5 +124,6 @@ namespace Api_SistemaGestion.Controllers
                 return StatusCode(500, "Ocurrió un error interno."); // 500 Internal Server Error
             }
         }
+
     }
 }

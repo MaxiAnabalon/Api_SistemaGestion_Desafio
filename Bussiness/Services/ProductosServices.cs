@@ -12,6 +12,10 @@ public class ProductosServices
         _productosDataAccess = ProductosDataAccess;
     }
 
+    public ProductosServices()
+    {
+    }
+
     public Producto? OneProductoSer(int Id)
     {
         return _productosDataAccess.OneProducto(Id);

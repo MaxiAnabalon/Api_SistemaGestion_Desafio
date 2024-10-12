@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Entidades;
 
 public class Venta
@@ -17,6 +17,9 @@ public class Venta
     [Range(1, double.MaxValue, ErrorMessage = "El Id Usuario debe ser mayor a 0.")]
     [Display(Name = "Id Usuario")]
     public int IdUsuario { get; set; }
+
+    [NotMapped]
+    public List<ProductoVendido>? lsProductosVendidos{ get; set; } = new List<ProductoVendido>();
 
     //public Venta(int id, string comentario, int idUsuario)
     //{
