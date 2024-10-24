@@ -23,6 +23,13 @@ public class UsuarioDB
         return _conexion.Usuarios.ToList();
     }
 
+    public List<Usuario> GetUsuariosPorNombre(string nombre)
+    {
+        return _conexion.Usuarios
+                        .Where(u => u.nombreDeUsuario.Contains(nombre)) // Asegúrate de usar el campo correcto
+                        .ToList();
+    }
+
     public bool UpdateUsuario(int Id, Usuario usuario)
     {
         try

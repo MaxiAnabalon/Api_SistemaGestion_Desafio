@@ -4,7 +4,9 @@
 @inject NavigationManager NavigationManager
 
 <h2>Modificar Producto Vendido</h2>
-
+<div style="position: absolute; top: 20px; right: 20px;">
+    <NavLink class="btn btn-primary" href="/">Menu</NavLink>
+</div>
 @if (nuevoProductoVendido != null)
 {
     <EditForm Model="nuevoProductoVendido" OnValidSubmit="GuardarProducto" FormName="ModificarProductoVendidoForm">
@@ -43,16 +45,16 @@ else
 
     public ProductoVendido nuevoProductoVendido = new ProductoVendido();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         // Cargar el producto basado en el ID de manera sincrónica
-        nuevoProductoVendido = servicesProductosVendidos.OneProductoVendidoSer(Id);
+        nuevoProductoVendido = await servicesProductosVendidos.OneProductoVendidoSer(Id);
     }
 
-    private void GuardarProducto()
+    private async Task GuardarProducto()
     {
         // Llama al método UpdateProductoSer con el ID y el producto actualizado
-        servicesProductosVendidos.UpdateProductoVendidoSer(Id, nuevoProductoVendido);
+        await servicesProductosVendidos.UpdateProductoVendidoSer(Id, nuevoProductoVendido);
         NavigationManager.NavigateTo("/ProductosVendidos");
     }
 

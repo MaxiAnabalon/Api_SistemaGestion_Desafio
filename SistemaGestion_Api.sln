@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bussiness", "Bussiness\Bussiness.csproj", "{855680E2-6E1C-4EFD-9D1D-189DB942B820}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api_SistemaGestion", "Api_SistemaGestion\Api_SistemaGestion.csproj", "{C5FA5B37-FED9-4527-A6BC-18B82DA3DC7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api_SistemaGestion", "Api_SistemaGestion\Api_SistemaGestion.csproj", "{C5FA5B37-FED9-4527-A6BC-18B82DA3DC7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

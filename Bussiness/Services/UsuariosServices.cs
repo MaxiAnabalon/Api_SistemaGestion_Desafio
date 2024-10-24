@@ -21,6 +21,12 @@ public class UsuariosServices
         return _usuariosServicesDataAccess.GetUsuarios();
     }
 
+    public List<Usuario> GetUsuariosPorNombre(string nombre)
+    {
+        
+        return _usuariosServicesDataAccess.GetUsuariosPorNombre(nombre);
+    }
+
     public bool UpdateUsuarioSer(int Id, Usuario usuario)
     {
        return _usuariosServicesDataAccess.UpdateUsuario(Id, usuario); 

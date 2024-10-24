@@ -15,9 +15,13 @@ public class DBConnection : DbContext
 
     public DBConnection(DbContextOptions<DBConnection> options) : base(options) { }
 
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Data Source=ANABALON\\SQLEXPRESS;Initial Catalog=CoderhousePreEntregaFinal;Integrated Security=True;Encrypt=True;TrustServerCertificate=True");
+        if (!optionsBuilder.IsConfigured)
+        {
+           // optionsBuilder.UseSqlServer("Data Source=ANABALON\\SQLEXPRESS;Initial Catalog=CoderhousePreEntregaFinal;Integrated Security=True;Encrypt=True;TrustServerCertificate=True");
+        };
 
     }
 

@@ -1,10 +1,15 @@
-﻿@page "/AgregarUsuario"
+﻿@page "/AgregarUsuario/{id:int?}"
 @rendermode InteractiveServer
-@inject UsuariosServices servicesUsuarios;
+@inject UsuariosServices servicesUsuarios
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+
 
 <h2>Agregar Nuevo Usuario</h2> 
-
+<div style="position: absolute; top: 20px; right: 20px;">
+    <NavLink class="btn btn-primary" href="/">Menu</NavLink>
+</div>
 <EditForm Model="nuevoUsuario" OnValidSubmit="GuardarUsuario" FormName="AgregarUsuarioForm">
     <DataAnnotationsValidator />
 
@@ -38,18 +43,60 @@
 </EditForm>
  
 @code {
+    [Parameter]
+    public int? id { get; set; }
 
     public Usuario nuevoUsuario = new Usuario();
 
     private async Task GuardarUsuario()
     {
-        servicesUsuarios.InsertUsuarioSer(nuevoUsuario);
-        NavigationManager.NavigateTo("/Usuarios");
+        //await servicesUsuarios.InsertUsuarioSer(nuevoUsuario);
+        //NavigationManager.NavigateTo("/Usuarios");
+        // Validar si el nuevo usuario es válido
+        if (nuevoUsuario == null)
+        {
+            await MostrarMensaje("El usuario no es válido.");
+            return;
+        }
+
+        // Intentar guardar el nuevo usuario
+        var (usuarioCreado, mensaje) = await servicesUsuarios.InsertUsuarioSer(nuevoUsuario);
+
+        // Mostrar el mensaje devuelto por el método
+        await MostrarMensaje(mensaje);
+
+        if (usuarioCreado != null)
+        {
+            if (id == 0)
+            {
+                NavigationManager.NavigateTo("/Usuarios");
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        
+    }
+
+    // Método para mostrar el mensaje
+    private async Task MostrarMensaje(string mensaje)
+    {
+         // Aquí puedes usar un simple alert de JavaScript
+         await JSRuntime.InvokeVoidAsync("alert", mensaje);
+     
     }
 
     private void Cancelar()
     {
-        NavigationManager.NavigateTo("/Usuarios");
+        if (id == 0)
+        {
+            NavigationManager.NavigateTo("/Usuarios");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 }
 

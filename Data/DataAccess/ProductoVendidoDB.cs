@@ -21,6 +21,12 @@ public class ProductoVendidoDB
         return _conexion.ProductosVendidos.ToList();
     }
 
+    public List<ProductoVendido> GetProductosVendidosPorVenta(int ventaID)
+    {
+        return _conexion.ProductosVendidos
+                        .Where(pv => pv.IdVenta == ventaID)
+                        .ToList();
+    }
     public bool UpdateProductoVendido(int Id, ProductoVendido productoVend)
     {
         try

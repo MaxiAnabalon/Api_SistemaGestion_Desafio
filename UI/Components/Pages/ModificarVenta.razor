@@ -5,7 +5,9 @@
 
 
 <h2>Modificar Usuarios</h2>
- 
+<div style="position: absolute; top: 20px; right: 20px;">
+    <NavLink class="btn btn-primary" href="/">Menu</NavLink>
+</div>
 @if (nuevoVenta != null)
 {
     <EditForm Model="nuevoVenta" OnValidSubmit="GuardarVenta" FormName="ModificarVentaForm">
@@ -36,16 +38,16 @@ else
     public int Id { get; set; }
     public Venta nuevoVenta = new Venta();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         // Cargar el producto basado en el ID de manera sincrónica
-        nuevoVenta = servicesVentas.OneVentaSer(Id);
+        nuevoVenta = await servicesVentas.OneVentaSer(Id);
     }
 
-    private void GuardarVenta()
+    private async Task GuardarVenta()
     {
    
-        servicesVentas.UpdateVentaSer(Id, nuevoVenta);
+        await servicesVentas.UpdateVentaSer(Id, nuevoVenta);
         NavigationManager.NavigateTo("/Ventas");
     }
 

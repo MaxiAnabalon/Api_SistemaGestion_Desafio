@@ -25,6 +25,11 @@ public class ProductosVendidosServices
        return _productosVendidosDataAccess.GetProductoVendido();
     }
 
+    public List<ProductoVendido> GetProductosVendidosPorVentaServices(int ventaID)
+    {
+        return _productosVendidosDataAccess.GetProductosVendidosPorVenta(ventaID);
+    }
+
     public bool UpdateProductoVendidoSer(int Id, ProductoVendido productoVend)
     {
         return _productosVendidosDataAccess.UpdateProductoVendido(Id, productoVend);

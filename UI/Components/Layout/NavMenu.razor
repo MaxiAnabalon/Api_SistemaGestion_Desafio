@@ -1,8 +1,5 @@
 ﻿
 
-@if (true)
-{
-
     <div class="top-row ps-3 navbar navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="">Menu</a>
@@ -11,7 +8,7 @@
 
     <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-    <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+  @*   <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
         <nav class="flex-column">
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -39,84 +36,4 @@
                 </NavLink>
             </div>
         </nav>
-    </div>
-}
-else
-{
-    <div>
-        <h3 style="color:antiquewhite">Iniciar Sesión</h3>
-
-        
-
-        @* <EditForm Model="@logUsuario" OnValidSubmit="HandleLogin">
-        <DataAnnotationsValidator />
-
-        <div class="form-group mb-3">
-        <label for="username" class="form-label" style="color:antiquewhite">Usuario</label>
-        <InputText id="username" class="form-control" @bind-Value="logUsuario.nombreDeUsuario" />
-        <ValidationMessage For="@(() => logUsuario.nombreDeUsuario)" />
-        </div>
-
-        <div class="form-group mb-3">
-        <label for="password" class="form-label" style="color:antiquewhite">Contraseña</label>
-        <InputText id="password" type="password" class="form-control" @bind-Value="logUsuario.contraseña" />
-        <ValidationMessage For="@(() => logUsuario.contraseña)" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-
-        @if (loginError)
-        {
-        <div class="alert alert-danger mt-3">
-        Usuario o contraseña incorrectos.
-        </div>
-        }
-        </EditForm>   *@
-    </div>
-
-
-}
-
-
-@code {
-    public bool isAuthenticated = false; // Estado de autenticación
-
-    //private LoginModel loginModel = new LoginModel();
-
-    private bool loginError = false;
-
-    public Usuario logUsuario = new Usuario();
-
-    protected override void OnInitialized()
-    {
-        // Verifica el estado de autenticación al iniciar el componente
-        isAuthenticated = CheckUserAuthentication();
-    }
-
-    private bool CheckUserAuthentication()
-    {
-
-        // Lógica para verificar si el usuario está logueado
-        return false; // Cambia esto según tu implementación
-    }
-
-    public async Task HandleLogin()
-    {
-        // Simulación de validación de usuario y contraseña
-        if (logUsuario.nombreDeUsuario == "usuario" && logUsuario.contraseña == "M12345678")
-        {
-            isAuthenticated = true; // Actualiza el estado de autenticación
-            loginError = false;
-
-            // Redirigir a la página principal o simplemente recargar la página
-            StateHasChanged();
-        }
-        else
-        {
-            loginError = true; // Si hay error en el inicio de sesión
-        }
-    }
-
-}
- 
-
+    </div> *@

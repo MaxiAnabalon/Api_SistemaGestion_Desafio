@@ -1,5 +1,7 @@
+using UI.ClientServices;
 using UI.Components;
-using Bussiness;
+using UI.Components.Pages;
+//using Bussiness;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-//Inyeccion de servicion por capas 
-builder.Services.ConfigureBussinessLayer();
+////Inyeccion de servicion por capas 
+//builder.Services.ConfigureBussinessLayer();
+
+builder.Services.AddTransient<ProductosServices>();
+builder.Services.AddTransient<ProductosVendidosServices>();
+builder.Services.AddTransient<UsuariosServices>(); 
+builder.Services.AddTransient<VentasServices>();
+
+var apiUrl = builder.Configuration["ApiUrl"];
+
+builder.Services.AddHttpClient<ProductosServices>(
+    client => client.BaseAddress = new Uri($"{apiUrl}/api/Productos/")
+    );
+builder.Services.AddHttpClient<ProductosVendidosServices>(
+    client => client.BaseAddress = new Uri($"{apiUrl}/api/ProductosVendidos/")
+    );
+builder.Services.AddHttpClient<UsuariosServices>(
+    client => client.BaseAddress = new Uri($"{apiUrl}/api/Usuarios/")
+    );
+builder.Services.AddHttpClient<VentasServices>(
+    client => client.BaseAddress = new Uri($"{apiUrl}/api/Ventas/")
+    );
 
 var app = builder.Build();
 

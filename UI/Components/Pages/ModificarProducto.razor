@@ -5,7 +5,9 @@
 
 
 <h2>Modificar Producto</h2>
-
+<div style="position: absolute; top: 20px; right: 20px;">
+    <NavLink class="btn btn-primary" href="/">Menu</NavLink>
+</div>
 @if (nuevoProducto != null)
 {
     <EditForm Model="nuevoProducto" OnValidSubmit="GuardarProducto" FormName="ModificarProductoForm">
@@ -50,16 +52,16 @@ else
     public int Id { get; set; }
     public Producto nuevoProducto = new Producto();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         // Cargar el producto basado en el ID de manera sincrónica
-        nuevoProducto = servicesProductos.OneProductoSer(Id);
+        nuevoProducto = await servicesProductos.OneProductoSer(Id);
     }
 
-    private void GuardarProducto()
+    private async Task GuardarProducto()
     {
         // Llama al método UpdateProductoSer con el ID y el producto actualizado
-        servicesProductos.UpdateProductoSer(Id, nuevoProducto);
+        await servicesProductos.UpdateProductoSer(Id, nuevoProducto);
         NavigationManager.NavigateTo("/Productos");
     }
 

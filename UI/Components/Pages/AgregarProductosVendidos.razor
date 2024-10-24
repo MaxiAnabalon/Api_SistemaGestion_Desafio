@@ -4,7 +4,9 @@
 @inject NavigationManager NavigationManager
 
 <h2>Agregar Nuevo Producto Vendido</h2>
-
+<div style="position: absolute; top: 20px; right: 20px;">
+    <NavLink class="btn btn-primary" href="/">Menu</NavLink>
+</div>
 <EditForm Model="nuevoProductoVendido" OnValidSubmit="GuardarProducto" FormName="AgregarProductoForm">
     <DataAnnotationsValidator />
 
@@ -34,7 +36,7 @@
 
     private async Task GuardarProducto()
     {
-        servicesProductosVendidos.InsertProductosVendidoSer(nuevoProductoVendido);
+        await servicesProductosVendidos.InsertProductosVendidoSer(nuevoProductoVendido);
         NavigationManager.NavigateTo("/ProductosVendidos");
     }
 

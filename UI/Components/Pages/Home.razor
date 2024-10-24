@@ -1,6 +1,141 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject UsuariosServices servicesUsuarios
+@inject IJSRuntime JSRuntime
+
 
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-center display-1">Sistema Gestion</h1>
-<h5 class="text-center" >Pre-entrega Final</h5>
+<h2 class="text-center">Trabajo Final</h2>
+
+
+
+
+@if (!resultado)
+{
+
+    <div class="d-flex flex-column align-items-center mt-5">
+        <div class="card p-4" style="width: 300px;">
+            <h3 class="text-center">Login</h3>
+            <div class="mb-3">
+                <input type="text" class="form-control" @bind="usuario" placeholder="Usuario" />
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" @bind="contra" placeholder="Contraseña" />
+            </div>
+            <button class="btn btn-primary w-100" @onclick="ValidarIngreso">Ingresar</button>
+            
+            <NavLink class="btn btn-primary w-100 mt-1" href="/AgregarUsuario/1">
+                Crear Usuario
+            </NavLink>
+        </div>
+    </div>
+
+     @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p class="d-flex flex-column align-items-center mt-5">@mensaje</p>
+    } 
+}
+else
+{ 
+    <div class="d-flex flex-column align-items-center mt-5">
+        <div class="card p-4" style="width: 300px;">
+            <h3 class="text-center text-dark mb-3">Menú</h3>
+            <div class="mb-3">
+                <NavLink class="nav-link btn btn-outline-dark w-100 mb-2" href="realizarCompra">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Realizar Compra
+                </NavLink>
+            </div>
+            <div class="mb-3">
+                <NavLink class="nav-link btn btn-outline-dark w-100 mb-2" href="Productos">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Productos
+                </NavLink>
+            </div>
+            <div class="mb-3">
+                <NavLink class="nav-link btn btn-outline-dark w-100 mb-2" href="ProductosVendidos">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Productos Vendidos
+                </NavLink>
+            </div>
+            <div class="mb-3">
+                <NavLink class="nav-link btn btn-outline-dark w-100 mb-2" href="Usuarios">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Usuarios
+                </NavLink>
+            </div>
+            <div class="mb-3">
+                <NavLink class="nav-link btn btn-outline-dark w-100 mb-2" href="Ventas">
+                    <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Ventas
+                </NavLink>
+            </div>
+        </div>
+    </div>
+
+}
+
+@code {
+    public string usuario { get; set; }
+    public string contra { get; set; }
+    public string mensaje { get; set; }
+    public bool resultado { get; set; }
+
+    public bool isFirstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Verifica el estado de sesión aquí
+            var isLoggedIn = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "isLoggedIn");
+            resultado = isLoggedIn == "true";
+            StateHasChanged();
+        }
+    }
+
+    public async Task ValidarIngreso()
+    {
+        try
+        {
+            resultado = await servicesUsuarios.ValidarIngresoUsuarioAsync(usuario, contra);
+            //var oUsuario = await servicesUsuarios.GetUsuariosPorNombreUsuario(usuario);
+            if (resultado)
+            {
+                mensaje = "Ingreso exitoso";
+                var lsUsuario = await servicesUsuarios.GetUsuariosPorNombreUsuario(usuario);
+                if (lsUsuario != null && lsUsuario.Any())
+                {
+                    var oUsuario = lsUsuario.First();                   
+                    // Llama a una función que se ejecute después de la renderización
+                    await AlmacenarEstadoSesion(oUsuario.Id);
+                }
+                
+                StateHasChanged();
+
+            }
+            else
+            {
+                mensaje = "Usuario o contraseña incorrectos";
+
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = "Usuario o contraseña incorrectos";
+
+        }
+
+        if (!string.IsNullOrEmpty(mensaje))
+        {
+            StateHasChanged(); // Actualiza la UI
+            await Task.Delay(7000); // Espera 5 segundos
+            mensaje = null; // Oculta el mensaje
+            StateHasChanged(); // Actualiza la UI
+        }
+    }
+
+
+    private async Task AlmacenarEstadoSesion(int userId)
+    {
+        await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "isLoggedIn", "true");       
+        await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "userId", userId.ToString());        
+    }
+}

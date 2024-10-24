@@ -18,7 +18,7 @@ public class ProductoVendido
     public int stock { get; set; }
 
     [Required(ErrorMessage = "El campo Id Venta es requerido.")]
-    [Range(1, int.MaxValue, ErrorMessage = "El Id Venta debe ser mayor a 0.")]
+    [Range(0, int.MaxValue, ErrorMessage = "El Id Venta debe ser mayor a 0.")]
     [Display(Name = "Id Venta")]
     public int IdVenta { get; set; }
 
