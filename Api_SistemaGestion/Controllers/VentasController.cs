@@ -164,10 +164,17 @@ namespace Api_SistemaGestion.Controllers
             }
 
             // Lista para almacenar los productos vendidos relacionados
-            var productosVendidos = venta.lsProductosVendidos;
+            //var productosVendidos = venta.lsProductosVendidos;
+            var productoVendoDos = _productosVendidosServices.GetProductosVendidosSer();
+            // Filtra la lista usando LINQ
+            var productosFiltrados = productoVendoDos
+                .Where(p => p.IdVenta == id)
+                .ToList(); // Convierte el resultado a una lista si lo necesitas
 
-            // Actualizar el stock de los productos vendidos
-            foreach (var productoVendido in productosVendidos)
+
+
+            // Actualizar el stock de los productos eliminado vendidos
+            foreach (var productoVendido in productosFiltrados)
             {
                 var producto = _productosServices.OneProductoSer(productoVendido.IdProducto);
                 producto.stock += productoVendido.stock; // Restablecer stock
@@ -175,7 +182,7 @@ namespace Api_SistemaGestion.Controllers
             }
 
             // Eliminar los productos vendidos
-            foreach (var productoVendido in productosVendidos)
+            foreach (var productoVendido in productosFiltrados)
             {
                 _productosVendidosServices.DeleteProductoVendidoSer(productoVendido.Id); // Eliminar el registro
             }
